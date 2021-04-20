@@ -1,38 +1,23 @@
-# create-svelte
+# sveltekit-router
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+This is a VERY experimental proof of concept for a generic SvelteKit endpoint router that would allow you to do the following:
 
-## Creating a project
+`src/routes/api/[...path].ts`:
 
-If you're seeing this, you've probably already done this step. Congrats!
+```ts
+import type { Routes } from './_router'
 
-```bash
-# create a new project in the current directory
-npm init svelte@next
-
-# create a new project in my-app
-npm init svelte@next my-app
+export const routes: Routes = {
+  'GET /ping': async ({ request, params }) => ({ body: { request, params } }),
+  'GET /users': async () => ({ body: { users: [] } }),
+  'GET /users/:id': async ({ params }) => ({
+    body: { user: { id: params.id } },
+  }),
+}
 ```
 
-> Note: the `@next` is temporary
+This is not something you should use (it's not even packaged yet), but might be informative for reference.o
 
-## Developing
+## License
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
-
-```bash
-npm run build
-```
-
-> You can preview the built app with `npm start`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+MIT
