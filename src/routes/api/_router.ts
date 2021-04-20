@@ -8,6 +8,7 @@ export const supportedMethods = [
   'PATCH',
   'DELETE',
 ] as const
+
 export type SupportedHTTPMethod = typeof supportedMethods[number]
 
 export interface Routes {
@@ -24,12 +25,8 @@ export function svelteKitAdapter(basePath = '', routes: Routes) {
   const handle = async (method: SupportedHTTPMethod, req) => {
     const { path } = req
 
-    console.log({ req })
-
     const route = matchRoute(routes, method, path.replace(basePath, ''))
     if (!route) return { body: { error: 'no route match', status: 404 } }
-
-    console.log({ route })
 
     const resp = await route.handler({
       request: req,
@@ -37,8 +34,6 @@ export function svelteKitAdapter(basePath = '', routes: Routes) {
     })
 
     if (!resp) return { body: { error: 'something broke', status: 500 } }
-
-    console.log({ resp })
 
     return resp
   }
@@ -76,28 +71,16 @@ function makeRouteTable(
 }
 
 function matchRoute(routes: Routes, method: SupportedHTTPMethod, path: string) {
-  console.log({ path })
-
   const routeTable = makeRouteTable(routes)
-
-  console.log({ routeTable })
-
-  console.log({ routes })
 
   for (const supportedMethod of supportedMethods) {
     const available = routeTable[supportedMethod]
-
-    console.log({ available })
 
     if (available) {
       for (const [_, route] of Object.entries(available)) {
         const methodMatched = method === supportedMethod
 
-        console.log({ methodMatched, method, supportedMethod })
-
         const matched = methodMatched && route.matcher(path)
-
-        console.log({ matched })
 
         if (matched) return { matched, handler: route.handler }
       }
