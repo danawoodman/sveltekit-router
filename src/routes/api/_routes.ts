@@ -1,10 +1,9 @@
 import type { Routes } from './_router'
 
 export const routes: Routes = {
-  'GET /users': async ({ request }) => ({
-    body: { users: [] },
-  }),
-  'GET /users/:id': async ({ request, params }) => ({
-    body: { message: `Welcome to ${request.host}`, request, params },
+  'GET /ping': async ({ request, params }) => ({ body: { request, params } }),
+  'GET /users': async () => ({ body: { users: [] } }),
+  'GET /users/:id': async ({ params }) => ({
+    body: { user: { id: params.id } },
   }),
 }
